@@ -1,28 +1,31 @@
-/* eslint-disable no-unused-vars */
-
 const express = require("express"); //importing express
 const app = express(); // creating new application
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 const path = require("path");
 const { Todo } = require("./models");
+// eslint-disable-next-line no-unused-vars
 const todo = require("./models/todo");
 app.use(express.static(path.join(__dirname,'public')));
 //SET EJS AS VIEW ENGINE
  app.set("view engine","ejs");
- app.get("/",async(request,response)=>{
+ app.get("/", async (request, response) => {
   const allTodos = await Todo.getTodos();
-  if(request.accepts("html")){
-    response.render('index',{
-      allTodos
+  const overdue = await Todo.overdue();
+  const dueLater = await Todo.dueLater();
+  const dueToday = await Todo.dueToday();
+  if (request.accepts("html")) {
+    response.render("index", {
+      title: "Todo Application",
+      allTodos,
+      overdue,
+      dueLater,
+      dueToday,
     });
-  }else{
-    response.json({
-      allTodos
-    });
+  } else {
+    response.json(overdue, dueLater, dueToday);
   }
-  
- });
+});
  
 
 app.get("/todos", async (request, response) => {
@@ -30,7 +33,7 @@ app.get("/todos", async (request, response) => {
   console.log("Todo list");
   try {
     const todoslist = await Todo.findAll();
-    return response.send(todoslist);
+    return response.json(todoslist);
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
@@ -49,12 +52,13 @@ app.get("/todos/:id", async function (request, response) {
 app.post("/todos", async (request, response) => {
   console.log("creating new todo", request.body);
   try {
+    // eslint-disable-next-line no-unused-vars
     const todo = await Todo.addTodo({
       title: request.body.title,
       dueDate: request.body.dueDate,
       commpleted: false,
     });
-    return response.json(todo);
+    return response.redirect("/");
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
