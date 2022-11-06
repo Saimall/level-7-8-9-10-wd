@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       return this.removetask(id);
     }
     static getTodos() {
-      return this.findAll();
+      return this.findAll({ order : [["id","ASC"]]});
     }
     static overdue() {
       return this.findAll({

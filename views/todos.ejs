@@ -6,7 +6,7 @@
       <% for(let i = 0; i < data.length; i++) { %>
       <li>
         <div class="flex items-center w-fit ml-2 py-1 px-2 my-1 todoItem bg-rounded hover:bg-purple-100">
-          <input id="todo-checkbox-<%= data[i].id %>" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300">
+          <input id="todo-checkbox-<%= data[i].id %>" type="todo-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300">
           <label for="todo-checkbox-<%= data[i].id %>" class=" ml-2 text-sm text-gray-600 curser-pointer">
             <%= data[i].title %>
           </label>

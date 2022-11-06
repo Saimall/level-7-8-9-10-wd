@@ -7,6 +7,7 @@ const { Todo } = require("./models");
 // eslint-disable-next-line no-unused-vars
 const todo = require("./models/todo");
 app.use(express.static(path.join(__dirname,'public')));
+app.use(express.urlencoded({ extended: false }));
 //SET EJS AS VIEW ENGINE
  app.set("view engine","ejs");
  app.get("/", async (request, response) => {
