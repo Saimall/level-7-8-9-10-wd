@@ -1,6 +1,6 @@
 "use strict";
-const { Model } = require("sequelize");
-const Op = require("sequelize");
+const { Model, Op } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       return this.removetask(id);
     }
     static getTodos() {
-      return this.findAll({ order : [["id","ASC"]]});
+      return this.findAll({ order: [["id", "ASC"]] });
     }
     static overdue() {
       return this.findAll({
@@ -56,11 +56,26 @@ module.exports = (sequelize, DataTypes) => {
         order: [["id", "ASC"]],
       });
     }
+    static completedItems() {
+      return this.findAll({
+        where: {
+          completed: true,
+        },
+        order: [["id", "ASC"]],
+      });
+    }
+    static async remove(id) {
+      return this.destroy({
+        where: {
+          id,
+        },
+      });
+    }
     markAsCompleted() {
       return this.update({ completed: true });
     }
   }
- 
+
   Todo.init(
     {
       title: DataTypes.STRING,

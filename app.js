@@ -6,11 +6,11 @@ const path = require("path");
 const { Todo } = require("./models");
 // eslint-disable-next-line no-unused-vars
 const todo = require("./models/todo");
-app.use(express.static(path.join(__dirname,'public')));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 //SET EJS AS VIEW ENGINE
- app.set("view engine","ejs");
- app.get("/", async (request, response) => {
+app.set("view engine", "ejs");
+app.get("/", async (request, response) => {
   const allTodos = await Todo.getTodos();
   const overdue = await Todo.overdue();
   const dueLater = await Todo.dueLater();
@@ -27,7 +27,6 @@ app.use(express.urlencoded({ extended: false }));
     response.json(overdue, dueLater, dueToday);
   }
 });
- 
 
 app.get("/todos", async (request, response) => {
   // defining route to displaying message
@@ -54,7 +53,7 @@ app.post("/todos", async (request, response) => {
   console.log("creating new todo", request.body);
   try {
     // eslint-disable-next-line no-unused-vars
-    const todo = await Todo.addTodo({
+    await Todo.addTodo({
       title: request.body.title,
       dueDate: request.body.dueDate,
       commpleted: false,
@@ -80,15 +79,9 @@ app.put("/todos/:id/markAsCompleted", async (request, response) => {
 app.delete("/todos/:id", async (request, response) => {
   console.log("delete a todo with ID:", request.params.id);
   try {
-    const tododelete = await Todo.findByPk(request.params.id);
-    if (tododelete) {
-      await tododelete.destroy();
-      return response.json(true);
-    } else {
-      return response.json(false);
-    }
+    await Todo.remove(request.params.id);
+    return response.json({ success: true });
   } catch (error) {
-    console.log(error);
     return response.status(422).json(error);
   }
 });
