@@ -20,11 +20,11 @@ app.get("/", async (request, response) => {
       title: "Todo Application",
       allTodos,
       overdue,
-      dueLater,
       dueToday,
+      dueLater,
     });
   } else {
-    response.json(overdue, dueLater, dueToday);
+    response.json({ overdue, dueToday, dueLater });
   }
 });
 
