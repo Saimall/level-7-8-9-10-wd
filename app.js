@@ -1,6 +1,8 @@
 const express = require("express"); //importing express
+var csrf = require("csurf");
 const app = express(); // creating new application
 const bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
 app.use(bodyParser.json());
 const path = require("path");
 const { Todo } = require("./models");
@@ -9,6 +11,8 @@ const todo = require("./models/todo");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 //SET EJS AS VIEW ENGINE
+app.use(cookieParser("shh! some secrete string"));
+app.use(csrf({ cookie: true }));
 app.set("view engine", "ejs");
 app.get("/", async (request, response) => {
   const allTodos = await Todo.getTodos();
@@ -22,6 +26,7 @@ app.get("/", async (request, response) => {
       overdue,
       dueToday,
       dueLater,
+      csrfToken: request.csrfToken(),
     });
   } else {
     response.json({ overdue, dueToday, dueLater });
