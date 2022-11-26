@@ -73,11 +73,12 @@ app.get("/", async (request, response) => {
 });
 
 app.get("/todo",connectEnsureLogin.ensureLoggedIn(), async(request,response)=>{
+  const loggedInUser = request.user.id;
   const allTodos = await Todo.getTodos();
-  const overdue = await Todo.overdue();
-  const dueLater = await Todo.dueLater();
-  const dueToday = await Todo.dueToday();
-  const completedItems = await Todo.completedItems();
+  const overdue = await Todo.overdue(loggedInUser);
+  const dueLater = await Todo.dueLater(loggedInUser);
+  const dueToday = await Todo.dueToday(loggedInUser);
+  const completedItems = await Todo.completedItems(loggedInUser);
   if (request.accepts("html")) {
     response.render("todo", {
       title: "Todo Application",
@@ -163,9 +164,10 @@ app.post("/todos", connectEnsureLogin.ensureLoggedIn(), async (request, response
     await Todo.addTodo({
       title: request.body.title,
       dueDate: request.body.dueDate,
-      commpleted: false,
+      completed: false,
+      userId: request.user.id
     });
-    return response.redirect("/");
+    return response.redirect("/todo");
   } catch (error) {
     console.log(error);
     return response.status(422).json(error);
@@ -198,7 +200,7 @@ app.put("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async (request, respon
 app.delete("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async (request, response) => {
   console.log("delete a todo with ID:", request.params.id);
   try {
-    await Todo.remove(request.params.id);
+    await Todo.remove(request.params.id, request.user.id);
     return response.json({ success: true });
   } catch (error) {
     return response.status(422).json(error);
