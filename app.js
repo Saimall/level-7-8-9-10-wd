@@ -104,7 +104,14 @@ app.get("/signup",(request,response)=>{
   response.render("signup",{title:"Signup",csrfToken: request.csrfToken() })
 })
 app.post("/users",async (request,response)=>{
-  
+  if(request.body.email.length==0){
+    request.flash("error", "email can not be empty!!");
+    return response.redirect("/signup");
+  }
+  if(request.body.firstName.length==0){
+    request.flash("error", "First name can not be empty");
+    return response.redirect("/signup");
+  }
   const hashedPwd = await bcrypt.hash(request.body.password,saltRounds)
   console.log(hashedPwd);
   
