@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <style>
+     body {  
+    background-image: url('todo.png');  
+}
+</style>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
@@ -11,7 +16,8 @@
     <link href="./css/style.css" rel="stylesheet" />
     
   </head>
-  <body>
+  <body style="background-color: rgb(128, 169, 183); background-image: url('todoimg.jpg');">
+    <center>
     <div class="grid grid-cols-6">
       <div class="col-start-3 col-span-2">
         <%- include("header.ejs") %> 
@@ -21,5 +27,6 @@
         
       </div>
     </div>
+  </center>
   </body>
 </html>
