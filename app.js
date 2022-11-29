@@ -135,7 +135,7 @@ app.post("/users",async (request,response)=>{
  
 }catch(error){
   console.log("error")
-  request.flash("error","User Already Exist")
+  request.flash("error","User Already Exist with this mail!!")
   return response.redirect("/signup")
 }
 });
