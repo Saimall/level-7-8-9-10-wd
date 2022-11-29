@@ -50,8 +50,8 @@ passport.use(new LocalStrategy({
       return done(null, false, { message: "Invalid password" });
     }
   })
-  .catch((error) => {
-    return done(error);
+  .catch(() => {
+    return done(null,false,{message:"Invalid User!!"});
   });
 }))
 
@@ -112,6 +112,10 @@ app.post("/users",async (request,response)=>{
     request.flash("error", "First name can not be empty");
     return response.redirect("/signup");
   }
+  if(request.body.password.length==0){
+    request.flash("error","Password can not be empty");
+    return response.redirect("/signup")
+  }
   const hashedPwd = await bcrypt.hash(request.body.password,saltRounds)
   console.log(hashedPwd);
   
@@ -130,7 +134,9 @@ app.post("/users",async (request,response)=>{
   })
  
 }catch(error){
-  console.log(error);
+  console.log("error")
+  request.flash("error","User Already Exist")
+  return response.redirect("/signup")
 }
 });
 
