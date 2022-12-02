@@ -153,7 +153,10 @@ describe("Todo test suite ", () => {
     });
     const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
     expect(parsedUpdateResponse.completed).toBe(false);
+   })
+
   });
+
   //test(" Delete todo using ID", async () => {
   //const response = await agent.post("/todos").send({
   //title: "Delete todo",
@@ -167,4 +170,3 @@ describe("Todo test suite ", () => {
   //const parsedremoveResponse = JSON.parse(deletetodo.text);
   //expect(parsedremoveResponse).toBe(true);
   //});
-});

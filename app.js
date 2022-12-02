@@ -129,8 +129,13 @@ app.post("/users",async (request,response)=>{
   request.login(user,(err)=>{
     if(err){
       console.log(err)
+      response.redirect("/");
     }
-    response.redirect("/todo");
+    else{
+      request.flash("success", "Sign up successful");
+      response.redirect("/todo");
+    }
+    
   })
  
 }catch(error){
