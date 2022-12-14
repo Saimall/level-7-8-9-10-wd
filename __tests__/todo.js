@@ -154,6 +154,60 @@ describe("Todo test suite ", () => {
     const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
     expect(parsedUpdateResponse.completed).toBe(false);
   });
+  test("One user cannot mark as complete/incomplete a todo of other user", async () => {
+    //create UserA account
+    let res = await agent.get("/signup");
+    let csrfToken = extractCsrfToken(res);
+    res = await agent.post("/users").send({
+      firstName: "Test",
+      lastName: "User A",
+      email: "userA@test.com",
+      password: "12345678",
+      _csrf: csrfToken,
+    });
+    //create Todo from UserA account
+    res = await agent.get("/todos");
+    csrfToken = extractCsrfToken(res);
+    res = await agent.post("/todos").send({
+      title: "Buy milk",
+      dueDate: new Date().toISOString(),
+      completed: false,
+      _csrf: csrfToken,
+    });
+    const idOfTodoFromUserA = res.id;
+    //Signout UserA
+    await agent.get("/signout");
+    //Create UserB account
+    res = await agent.get("/signup");
+    csrfToken = extractCsrfToken(res);
+    res = await agent.post("/users").send({
+      firstName: "Test",
+      lastName: "User B",
+      email: "userB@test.com",
+      password: "12345678",
+      _csrf: csrfToken,
+    });
+    //Try markAsComplete on UserA Todo from UserB account
+    res = await agent.get("/todos");
+    csrfToken = extractCsrfToken(res);
+    const markCompleteResponse = await agent
+      .put(`/todos/${idOfTodoFromUserA}/markAsCompleted`)
+      .send({
+        _csrf: csrfToken,
+        completed: true,
+      });
+    expect(markCompleteResponse.completed).toBe(false);
+    //Try markAsIncomplete on UserA Todo from UserB account
+    // res = await agent.get("/todos");
+    // csrfToken = extractCsrfToken(res);
+    // const markIncompleteResponse = await agent
+    //   .put(`/todos/${idOfTodoFromUserA}`)
+    //   .send({
+    //     _csrf: csrfToken,
+    //     completed: false,
+    //   });
+    // expect(markIncompleteResponse.completed).toBe(false);
+  });
 });
 
 //test(" Delete todo using ID", async () => {

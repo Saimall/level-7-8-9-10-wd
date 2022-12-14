@@ -240,6 +240,17 @@ app.put("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async (request, respon
      return response.status(422).json(error);
    }
  });
+ app.put("/todos/:id/markAsCompleted", async (request, response) => {
+  console.log("we have to update a todo with ID:", request.params.id);
+  const todo = await Todo.findByPk(request.params.id);
+  try {
+    const updatedtodo = await todo.markAsCompleted(request.body.completed);
+    return response.json(updatedtodo);
+  } catch (error) {
+    console.log(error);
+    return response.status(422).json(error);
+  }
+});
  
 app.delete("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async (request, response) => {
   console.log("delete a todo with ID:", request.params.id);
