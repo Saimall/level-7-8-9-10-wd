@@ -73,13 +73,18 @@ passport.deserializeUser((id,done)=>{
 
 
 app.get("/", async (request, response) => {
+  if(request.user){
+    return response.redirect("/todo");
+  }else{
    response.render("index", {
       title: "Todo Application",
       csrfToken: request.csrfToken(),
     });
+  }
 });
 
-app.get("/todo",connectEnsureLogin.ensureLoggedIn(), async(request,response)=>{
+app.get("/todo",connectEnsureLogin.ensureLoggedIn(), async function(request,response){
+  try{
   const loggedInUser = request.user.id;
   const allTodos = await Todo.getTodos();
   const overdue = await Todo.overdue(loggedInUser);
@@ -99,6 +104,9 @@ app.get("/todo",connectEnsureLogin.ensureLoggedIn(), async(request,response)=>{
   } else {
     response.json({ overdue, dueToday, dueLater, completedItems });
   }
+}catch(err){
+  console.log(err);
+}
 })
 app.get("/signup",(request,response)=>{
   response.render("signup",{title:"Signup",csrfToken: request.csrfToken() })
@@ -129,7 +137,7 @@ app.post("/users",async (request,response)=>{
   request.login(user,(err)=>{
     if(err){
       console.log(err)
-      response.redirect("/");
+      response.redirect("/todo");
     }
     else{
       request.flash("success", "Sign up successful");
@@ -220,8 +228,8 @@ app.post("/todos", connectEnsureLogin.ensureLoggedIn(), async (request, response
 //PUT https://mytodoapp.com/todos/123/markAscomplete
 app.put("/todos/:id",connectEnsureLogin.ensureLoggedIn(), async (request, response) => {
   console.log("we have to update a todo with ID:", request.params.id);
-  const todo = await Todo.findByPk(request.params.id);
   try {
+    const todo = await Todo.findByPk(request.params.id);
     const updatedtodo = await todo.setCompletionStatus(request.body.completed);
     return response.json(updatedtodo);
   } catch (error) {
