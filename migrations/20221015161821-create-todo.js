@@ -12,17 +12,22 @@ module.exports = {
       title: {
         type: Sequelize.STRING,
         allowNull: false,
-        validate:{
+        validate: {
           notNull: true,
-          len:5
-        }
+          len: 5,
+        },
+      },
+      notes: {
+        type: Sequelize.STRING,
+        defaultValue: "added todo",
+        allowNull: false,
       },
       dueDate: {
         type: Sequelize.DATEONLY,
       },
       completed: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,
@@ -37,5 +42,4 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("Todos");
   },
-  
 };

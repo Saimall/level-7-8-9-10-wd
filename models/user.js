@@ -13,6 +13,14 @@ module.exports = (sequelize, DataTypes) => {
       });
       // define association here
     }
+
+    static finduser(userId) {
+      return this.findOne({
+        where: {
+          id: userId,
+        },
+      });
+    }
   }
   User.init(
     {

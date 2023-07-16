@@ -22,6 +22,20 @@ module.exports = (sequelize, DataTypes) => {
         userId,
       });
     }
+    static addnotes({ notes, userId, id }) {
+      return this.update(
+        {
+          notes: notes,
+        },
+        {
+          where: {
+            userId: userId,
+            id: id,
+          },
+        }
+      );
+    }
+
     markAsCompleted() {
       return this.update({ completed: true });
     }
@@ -94,6 +108,7 @@ module.exports = (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       dueDate: DataTypes.DATEONLY,
       completed: DataTypes.BOOLEAN,
+      notes: DataTypes.STRING,
     },
     {
       sequelize,

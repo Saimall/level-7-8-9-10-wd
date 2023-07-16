@@ -15,7 +15,12 @@
           for="checkbox-<%= data[i].id %>"
           class="ml-2 text-sm text-gray-600 curser-pointer"
         >
-          <%= data[i].title %>
+          <%= data[i].title %> <a href="/todos/<%=data[i].id%>/note"  class="bg-green-600 text-white px-2 py-1 rounded font-medium mr-2 mb-2"">
+            Add Note
+          </a>
+          <a href="/todos/<%=data[i].id%>/viewnote"  class="bg-green-600 text-white px-2 py-1 rounded font-medium mr-2 mb-2"">
+            View Note
+          </a>
         </label>
         <a
           href="#"
@@ -37,7 +42,9 @@
             />
           </svg>
         </a>
+        
       </div>
+      
     </li>
     <% } %>
   </ul>
